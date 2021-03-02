@@ -7,9 +7,10 @@ class SpectralDensity:
     This class is used to build the spectral density for the over and under oscillation mode.
     """
 
-    def __init__(self, omega, omega_c):
-        self.omega = omega
-        self.omega_c = omega_c
+    # def __init__(self, omega, omega_c):
+    #     self.omega = omega
+    #     self.omega_c = omega_c
+    pass
 
     def calculate(self):
         pass
@@ -20,7 +21,8 @@ class SpectralDensity:
 
 class SdOverDamped(SpectralDensity):
     def __init__(self, omega):
-        super().__init__(omega, omega_c)
+        self.omega = omega
+        # super().__init__(omega, omega_c)
     # Class_methods:
     # ==============
     def calculate(self):
@@ -29,7 +31,9 @@ class SdOverDamped(SpectralDensity):
 
 class SdUnderDamped(SpectralDensity):
     def __init__(self, omega, omega_c):
-        super().__init__(omega, omega_c)
+        self.omega = omega
+        self.omega_c = omega_c
+        # super().__init__(omega, omega_c)
 
     # Class_methods:
     # ==============
