@@ -6,7 +6,10 @@ class SpectralDensity:
     """
     This class is used to build the spectral density for the over and under oscillation mode.
     """
-    pass
+
+    def __init__(self, omega, omega_c):
+        self.omega = omega
+        self.omega_c = omega_c
 
     def calculate(self):
         pass
@@ -17,8 +20,7 @@ class SpectralDensity:
 
 class SdOverDamped(SpectralDensity):
     def __init__(self, omega):
-        self.omega = omega
-
+        super().__init__(omega, omega_c)
     # Class_methods:
     # ==============
     def calculate(self):
@@ -27,8 +29,7 @@ class SdOverDamped(SpectralDensity):
 
 class SdUnderDamped(SpectralDensity):
     def __init__(self, omega, omega_c):
-        self.omega = omega
-        self.omega_c = omega_c
+        super().__init__(omega, omega_c)
 
     # Class_methods:
     # ==============
@@ -76,14 +77,14 @@ class CorrelationFunction:
             return 1 / np.tanh(beta * (- ki + 1j * gamma / 2) / 2)
 
         def exp_plus_analytical(t, ki):
-            return np.exp(-t * (self.gamma / 2 + 1j * ki) / h_bar)
+            return np.exp(-t * (gamma / 2 + 1j * ki) / h_bar)
 
         def exp_negative_analytical(t, ki):
-            return np.exp(-t * (self.gamma / 2 - 1j * ki) / h_bar)
+            return np.exp(-t * (gamma / 2 - 1j * ki) / h_bar)
 
-        beta = 1 / self.kBT
-        ki = np.sqrt(self.omega_c ** 2 - (self.gamma ** 2 / 4))
-        constant = self.lamd * self.omega_c ** 2 / (2 * ki)
+        beta = 1 / kBT
+        ki = np.sqrt(self.omega_c ** 2 - (gamma ** 2 / 4))
+        constant = lamd * self.omega_c ** 2 / (2 * ki)
         return constant * ((coth_plus_analytical(beta, ki) - 1) * exp_negative_analytical(t, ki) + (
                 - coth_negative_analytical(beta, ki) + 1) * exp_plus_analytical(t, ki))
 
