@@ -6,22 +6,24 @@ class SpectralDensity:
     """
        This class is used to build the spectral density for the over and under oscillation mode.
        """
-    def __init__(self, omega, lamd, gamma):
-        self.omega = omega
+
+    def __init__(self, lamd, gamma):
         self.lamd = lamd
         self.gamma = gamma
+        # self.omega = omega
+        # self.omega_c = omega_c
 
     def calculate(self):
         pass
 
     def plotting(self, x_axis):
-        return plt.plot(x_axis, self.calculate())  # ex: SpectralDensity.plotting(over,omega_list)
+        plt.plot(x_axis, self.calculate())  # ex: SpectralDensity.plotting(over,omega_list)
+
 
 class SdOverDamped(SpectralDensity):
     def __init__(self, omega):
-        super().__init__(omega, lamd, gamma)
         self.omega = omega
-
+        super().__init__(lamd, gamma)
 
     # Class_methods:
     # ==============
@@ -31,15 +33,14 @@ class SdOverDamped(SpectralDensity):
 
 class SdUnderDamped(SpectralDensity):
     def __init__(self, omega, omega_c):
-        super().__init__(omega, lamd, gamma)
         self.omega = omega
         self.omega_c = omega_c
+        super().__init__(lamd, gamma)
 
-    # Class_methods:
-    # ==============
+
     def calculate(self):
         return (2 * self.lamd * self.gamma * self.omega * self.omega_c ** 2) / (
-                (self.omega_c ** 2 - self.omega ** 2) ** 2 + (self.omega ** 2) * (self.gamma ** 2))
+                (omega_c ** 2 - self.omega ** 2) ** 2 + (self.omega ** 2) * (self.gamma ** 2))
 
 
 class CorrelationFunction:
