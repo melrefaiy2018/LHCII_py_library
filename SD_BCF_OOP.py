@@ -44,13 +44,24 @@ class CorrelationFunction:
     This class is used to calculate the Bath Correlation Function for the over and under damped oscillation modes.
     """
 
-    def __init__(self, omega, lamd, gamma, omega_c, kBT):
-        super().__init__(omega, lamd, gamma)
-        self.omega_c = omega_c
+    def __init__(self, lamd, gamma, kBT, h_bar):
         self.kBT = kBT
         self.h_bar = h_bar
+        self.lamd = lamd
+        self.gamma = gamma
 
-    def correlation_overDamped_mode(self, t):
+    def calculate(self, omega, omaga_c, t):
+        pass
+
+    def plotting(self, x_axis):
+        plt.plot(x_axis, self.calculate(self, omega, omega_c, t))  # ex: SpectralDensity.plotting(over,omega_list)
+
+
+class COverDamped(CorrelationFunction):
+    def __init__(self):
+        super().__init__(lamd, gamma, kBT, h_bar)
+
+    def calculate(self, omega, omaga_c, t):
         """
         This function is used to calculate the overdamped mode at high temperature approximation:
         Equation:
@@ -61,7 +72,12 @@ class CorrelationFunction:
         cot = 1 / np.tan((gamma * beta) / 2)
         return lamd * gamma * (cot - 1j) * np.exp(-gamma * t / h_bar)
 
-    def correlation_underDamped_mode(self, t):
+
+class CUnderDamped(CorrelationFunction):
+    def __init__(self):
+        super().__init__(lamd, gamma, omega_c, kBT)
+
+    def correlation_underDamped_mode(self, omega, omega_c, t):
         """
         This function is used to calculate the under-damped mode at high temperature approximation:
         FORMULA:
