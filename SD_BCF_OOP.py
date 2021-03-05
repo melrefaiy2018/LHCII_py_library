@@ -22,8 +22,8 @@ class SpectralDensity:
 
 class SdOverDamped(SpectralDensity):
     def __init__(self, omega):
-        self.omega = omega
         super().__init__(lamd, gamma)
+        self.omega = omega
 
     # Class_methods:
     # ==============
@@ -33,9 +33,9 @@ class SdOverDamped(SpectralDensity):
 
 class SdUnderDamped(SpectralDensity):
     def __init__(self, omega, omega_c):
+        super().__init__(lamd, gamma)
         self.omega = omega
         self.omega_c = omega_c
-        super().__init__(lamd, gamma)
 
 
     def calculate(self):
