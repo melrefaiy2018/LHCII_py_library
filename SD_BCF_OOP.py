@@ -52,11 +52,11 @@ class CorrelationFunction:
         pass
 
     def plotting(self, x_axis):
-        plt.plot(x_axis, self.calculate(self, omega, omaga_c, t))  # ex: SpectralDensity.plotting(over,omega_list)
+        plt.plot(x_axis, self.calculate(self, omega, omega_c, t))  # ex: SpectralDensity.plotting(over,omega_list)
 
 
 class COverDamped(CorrelationFunction):
-    def __init__(self, omega):
+    def __init__(self):
         super().__init__(lamd, gamma, kBT, h_bar)
 
     def calculate(self, omega, omaga_c, t):
@@ -72,10 +72,10 @@ class COverDamped(CorrelationFunction):
 
 
 class CUnderDamped(CorrelationFunction):
-    def __init__(self, omega):
-        super().__init__(omega, lamd, gamma, omega_c, kBT)
+    def __init__(self):
+        super().__init__(lamd, gamma, omega_c, kBT)
 
-    def correlation_underDamped_mode(self, t):
+    def correlation_underDamped_mode(self, omega, omega_c, t):
         """
         This function is used to calculate the under-damped mode at high temperature approximation:
         FORMULA:
