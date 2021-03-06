@@ -88,31 +88,48 @@ class CorrelationFunction:
                 - coth_negative_analytical(beta, ki) + 1) * exp_plus_analytical(t, ki))
 
 
-class MatsubaraApproximation:
+class MatsubaraApproximation(CorrelationFunction):
     """
     This class is used to calculate the matsubura approximation for both the over and under oscillation modes.
     # Low Temp approximation: gamma * T > 1
     """
 
-    def __init__(self, omega, lamd, gamma, omega_c):
-        super().__init__(omega, lamd, gamma, omega_c, kBT)
+    def __init__(self):
+        super().__init__()
 
-    def Mats_overDamped(self, t, l, N):
+    def calculate(self):
+        pass
+
+
+class Mats_overDamped(CorrelationFunction):
+    def __init__(self, l, N):
+        super().__init__(omega, omega_c, t)
+        self.l = l
+        self.N = N
+
+    def calculate(self):
         """
         This is the Matsubara approximation for the over-damped mode at the low temperature approximation.
         Equation:
         - 4 * lambda_k * gamma_k/beta * sum_l(eta_l * nu_l/( gamma_k**2-nu_l**2)*exp(-nu_l*t) )
         with beta = 1/temp
         """
-        beta = 1 / self.kBT
+        beta = 1 / kBT
         eta = 1
         # neu = 2 * np.pi * l / beta
         sigma_sum = np.array(
-            [ (eta * 2 * np.pi * l_min / beta) * np.exp(- 2 * np.pi * l_min / beta * t / self.h_bar) / (
-                    self.gamma ** 2 - (2 * np.pi * l_min / beta) ** 2) for l_min in range(l, N) ]).sum()
-        return sigma_sum * 4 * self.lamd * self.gamma / beta
+            [ (eta * 2 * np.pi * l_min / beta) * np.exp(- 2 * np.pi * l_min / beta * self.t / self.h_bar) / (
+                    gamma ** 2 - (2 * np.pi * l_min / beta) ** 2) for l_min in range(self.l, self.N) ]).sum()
+        return sigma_sum * 4 * lamd * gamma / beta
 
-    def Mats_underDamped(self, t, L_min, N):
+
+class Mats_underDamped(Correlation_underDamped):
+    def __init__(self, l, N):
+        super().__init__(omega, omega_c, t)
+        self.l = l
+        self.N = N
+
+    def calculate(self):
         """
         This is the Matsubara approximation for the under-damped mode at the low temperature approximation.
         Equation:
@@ -125,10 +142,9 @@ class MatsubaraApproximation:
         # neu = 2 * np.pi * l / beta
         constant = 4 * self.lamd * self.gamma * self.omega_c ** 2 / beta
         sigma_sum = np.array(
-            [ (eta * 2 * np.pi * l / beta) * np.exp((- 2 * np.pi * l / beta) * t / self.h_bar) / (
-                    (self.omega_c ** 2 + (2 * np.pi * l / beta) ** 2) ** 2 - (
-                    self.gamma ** 2 * (2 * np.pi * l / beta) ** 2)) for
-              l in range(L_min, N) ]).sum()
+            [ (eta * 2 * np.pi * l_min / beta) * np.exp((- 2 * np.pi * l_min / beta) * self.t / self.h_bar) / (
+                    (self.omega_c ** 2 + (2 * np.pi * l_min / beta) ** 2) ** 2 - (
+                    self.gamma ** 2 * (2 * np.pi * l_min / beta) ** 2)) for l_min in range(l, N) ]).sum()
         return constant * sigma_sum
 
 
