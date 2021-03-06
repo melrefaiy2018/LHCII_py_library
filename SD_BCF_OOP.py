@@ -48,18 +48,20 @@ class CorrelationFunction:
         self.lamd = lamd
         self.gamma = gamma
 
-    def calculate(self, omega, omaga_c, t):
+    def calculate(self):
         pass
 
     def plotting(self, x_axis):
-        plt.plot(x_axis, self.calculate(self, omega, omega_c, t))  # ex: SpectralDensity.plotting(over,omega_list)
+        plt.plot(x_axis, self.calculate()  # ex: SpectralDensity.plotting(over,omega_list)
 
 
 class COverDamped(CorrelationFunction):
-    def __init__(self):
+    def __init__(self, omega, omega_c):
         super().__init__(lamd, gamma, kBT, h_bar)
+        self.omega = omega
+        self.omega_c = omega_c
 
-    def calculate(self, omega, omaga_c, t):
+    def calculate(self):
         """
         This function is used to calculate the overdamped mode at high temperature approximation:
         Equation:
@@ -72,10 +74,12 @@ class COverDamped(CorrelationFunction):
 
 
 class CUnderDamped(CorrelationFunction):
-    def __init__(self):
-        super().__init__(lamd, gamma, omega_c, kBT)
+    def __init__(self, omega, omega_c):
+        super().__init__(lamd, gamma, kBT, h_bar)
+        self.omega = omega
+        self.omega_c = omega_c
 
-    def calculate(self, omega, omega_c, t):
+    def calculate(self):
         """
         This function is used to calculate the under-damped mode at high temperature approximation:
         FORMULA:
@@ -84,17 +88,17 @@ class CUnderDamped(CorrelationFunction):
 
         """
         beta = 1 / self.kBT
-        ki = np.sqrt(omega_c ** 2 - (self.gamma ** 2 / 4))
+        ki = np.sqrt(self.omega_c ** 2 - (self.gamma ** 2 / 4))
 
         coth_plus_analytical = 1 / np.tanh(beta * (ki + 1j * self.gamma / 2) / 2)
         coth_negative_analytical = 1 / np.tanh(beta * (- ki + 1j * self.gamma / 2) / 2)
 
         exp_plus_analytical = np.exp(-t * (self.gamma / 2 + 1j * ki) / self.h_bar)
         exp_negative_analytical = np.exp(-t * (self.gamma / 2 - 1j * ki) / self.h_bar)
-        constant = self.lamd * omega_c ** 2 / (2 * ki)
+        constant = self.lamd * self.omega_c ** 2 / (2 * ki)
 
-        return constant * ((coth_plus_analytical(beta, ki) - 1) * exp_negative_analytical(t, ki) + (
-                - coth_negative_analytical(beta, ki) + 1) * exp_plus_analytical(t, ki))
+        return constant * (coth_plus_analytical - 1) * exp_negative_analytical + (
+                - coth_negative_analytical + 1) * exp_plus_analytical
 
 class MatsubaraApproximation:
     """
