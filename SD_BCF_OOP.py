@@ -44,7 +44,6 @@ class Spectral_UnderDamped(SpectralDensity):
                 (omega_c ** 2 - self.omega ** 2) ** 2 + (self.omega ** 2) * (self.gamma ** 2))
 
 
-
 class CorrelationFunction(SpectralDensity):
     """
     This class is used to calculate the Bath Correlation Function for the over and under damped oscillation modes.
@@ -164,6 +163,15 @@ class Mats_underDamped(Correlation_underDamped):
         return constant * sigma_sum
 
 
+class Combine_Spectral(Spectral_OverDamped, Spectral_UnderDamped):
+    def __init__(self, omega, omega_c):
+        super().__init__(omega, omega_c)
+        super().__init__(omega, omega_c)
+
+    def Addition(self):
+        return Spectral_UnderDamped.calculate() + Spectral_OverDamped.calculate()
+
+
 # Constants:
 # ----------
 T = 295  # Unit : K
@@ -181,17 +189,28 @@ N = 40
 
 # # Object Instantiation:
 # # ---------------------
-# SD = SpectralDensity(omega_list)  # SD Object Instantiation
-# C_t = CorrelationFunction(omega_list, lamd, gamma, omega_c, kBT)  # correlation Object Instantiation
-# MatsubaraApproximation = MatsubaraApproximation(omega_list, lamd, gamma, omega_c)  # Matsubara Approx Object
-# # Instantiation
-#
+SD = SpectralDensity(lamd, gamma, kBT, h_bar)
+SD_over = Spectral_OverDamped(omega_list)
+SD_under = Spectral_UnderDamped(omega_list, omega_c)
+Mats_over = Mats_overDamped(omega_list, omega_c, t_list, l, N)
+Mats_under = Mats_underDamped(omega_list, omega_c, t_list, l, N)
+
+Total_SD = SD_over.calculate() + SD_under.calculate()  # construct 1 over & 1 under-damped mode
+Correlation = CorrelationFunction()
+corr_over = Correlation_overDamped(omega_list, omega_c, t_list)
+corr_under = Correlation_underDamped(omega_list, omega_c, t_list)
+
+Total_correlation = corr_over.calculate() - Mats_over.calculate() + corr_under.calculate() - Mats_under.calculate()
+
+plt.plot(t_list, Total_correlation)
+plt.show()
+
 # # storing list:
 # # -------------
-# BCF_under_damped_highTemp = [ ]
-# BCF_over_damped_highTemp = [ ]
-# BCF_under_damped_lowTemp = [ ]
-# BCF_over_damped_lowTemp = [ ]
+BCF_under_damped_highTemp = [ ]
+BCF_over_damped_highTemp = [ ]
+BCF_under_damped_lowTemp = [ ]
+BCF_over_damped_lowTemp = [ ]
 #
 # for t in t_list:
 #     # High temp approximation:
@@ -226,8 +245,11 @@ N = 40
 # plt.show()
 
 
-SD = SpectralDensity(lamd, gamma, kBT, h_bar)
-SD_over = Spectral_OverDamped(omega_list)
-SD_under = Spectral_UnderDamped(omega_list, omega_c)
-SD_over.plotting(omega_list)
-Correlation = CorrelationFunction()
+# SD = SpectralDensity(lamd, gamma, kBT, h_bar)
+# SD_over = Spectral_OverDamped(omega_list)
+# SD_under = Spectral_UnderDamped(omega_list, omega_c)
+# SD_over.plotting(omega_list)
+# Correlation = CorrelationFunction()
+# corr_over = Correlation_overDamped(omega_list, omega_c, t_list)
+# corr_under = Correlation_underDamped(omega_list, omega_c, t_list)
+# SD_comb = Combine_Spectral(omega_list,omega_c)
