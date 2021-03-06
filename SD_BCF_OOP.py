@@ -118,8 +118,8 @@ class MatsubaraApproximation(CorrelationFunction):
         pass
 
 
-class Mats_overDamped(CorrelationFunction):
-    def __init__(self, l, N):
+class Mats_overDamped(Correlation_overDamped):
+    def __init__(self, omega, omega_c, t, l, N):
         super().__init__(omega, omega_c, t)
         self.l = l
         self.N = N
@@ -141,7 +141,7 @@ class Mats_overDamped(CorrelationFunction):
 
 
 class Mats_underDamped(Correlation_underDamped):
-    def __init__(self, l, N):
+    def __init__(self, omega, omega_c, l, N):
         super().__init__(omega, omega_c, t)
         self.l = l
         self.N = N
@@ -161,7 +161,7 @@ class Mats_underDamped(Correlation_underDamped):
         sigma_sum = np.array(
             [ (eta * 2 * np.pi * l_min / beta) * np.exp((- 2 * np.pi * l_min / beta) * self.t / self.h_bar) / (
                     (self.omega_c ** 2 + (2 * np.pi * l_min / beta) ** 2) ** 2 - (
-                    self.gamma ** 2 * (2 * np.pi * l_min / beta) ** 2)) for l_min in range(l, N) ]).sum()
+                    self.gamma ** 2 * (2 * np.pi * l_min / beta) ** 2)) for l_min in range(self.l, self.N) ]).sum()
         return constant * sigma_sum
 
 
