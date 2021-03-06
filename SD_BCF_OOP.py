@@ -65,6 +65,9 @@ class CorrelationFunction(SpectralDensity):
     def __init__(self, lamd, gamma, kBT, h_bar):
         super().__init__(lamd, gamma, kBT, h_bar)
 
+    def __resp__(self):
+        pass
+        
     def calculate(self):
         pass
 
