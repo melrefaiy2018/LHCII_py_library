@@ -43,6 +43,7 @@ class SdUnderDamped(SpectralDensity):
         return (2 * self.lamd * self.gamma * self.omega * self.omega_c ** 2) / (
                 (omega_c ** 2 - self.omega ** 2) ** 2 + (self.omega ** 2) * (self.gamma ** 2))
 
+
 # =======================================
 class CorrelationFunction:
     """
