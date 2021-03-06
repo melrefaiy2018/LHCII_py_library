@@ -193,20 +193,20 @@ N = 40
 # # Object Instantiation:
 # # ---------------------
 SD = SpectralDensity(lamd, gamma, kBT, h_bar)
-SD_over1 = Spectral_OverDamped(omega_list)  # the first over-damped
-SD_over2 = Spectral_OverDamped(omega_list)  # the second over-damped
+SD_over1 = Spectral_OverDamped(omega_list, omega_c[ 0 ])  # the first over-damped
+SD_over2 = Spectral_OverDamped(omega_list, omega_c[ 1 ])  # the second over-damped
 
-SD_under1 = Spectral_UnderDamped(omega_list, 200)  # the first under-damped
-SD_under2 = Spectral_UnderDamped(omega_list, 300)  # the second under-damped
-SD_under3 = Spectral_UnderDamped(omega_list, 600)  # the second under-damped
+SD_under1 = Spectral_UnderDamped(omega_list, omega_c[ 0 ])  # the first under-damped
+SD_under2 = Spectral_UnderDamped(omega_list, omega_c[ 1 ])  # the second under-damped
+SD_under3 = Spectral_UnderDamped(omega_list, omega_c[ 2 ])  # the second under-damped
 
 # Mats_over = Mats_overDamped(omega_list, omega_c, t_list, l, N)
 # Mats_under = Mats_underDamped(omega_list, omega_c, t_list, l, N)
 
 Total_SD = SD_over1.calculate() + SD_under1.calculate() + SD_under2.calculate() + SD_under3.calculate()  # construct 1 over & 1 under-damped mode
 Total_SD = Total_SD.reshape(999, 3)
-# plt.plot(omega_list,Total_SD)
-
+plt.plot(omega_list, Total_SD)
+plt.show()
 
 Correlation = CorrelationFunction()
 corr_over1 = Correlation_overDamped(omega_list, 60, t_list)
@@ -225,10 +225,10 @@ Total_correlation = corr_over1.calculate() + corr_over2.calculate() + corr_under
 
 # # storing list:
 # # -------------
-BCF_under_damped_highTemp = [ ]
-BCF_over_damped_highTemp = [ ]
-BCF_under_damped_lowTemp = [ ]
-BCF_over_damped_lowTemp = [ ]
+# BCF_under_damped_highTemp = [ ]
+# BCF_over_damped_highTemp = [ ]
+# BCF_under_damped_lowTemp = [ ]
+# BCF_over_damped_lowTemp = [ ]
 
 # for t in t_list:
 #     # High temp approximation:
