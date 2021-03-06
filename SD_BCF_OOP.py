@@ -55,6 +55,8 @@ class Spectral_UnderDamped(SpectralDensity):
 
     def __add__(self, other):
         return self.calculate() + other.calculate()
+
+
 class CorrelationFunction(SpectralDensity):
     """
     This class is used to calculate the Bath Correlation Function for the over and under damped oscillation modes.
@@ -86,6 +88,8 @@ class Correlation_overDamped(Spectral_UnderDamped):
         cot = 1 / np.tan((self.gamma * beta) / 2)
         return self.lamd * self.gamma * (cot - 1j) * np.exp(- self.gamma * self.t / self.h_bar)
 
+    def __add__(self, other):
+        return self.calculate() + other.calculate()
 
 class Correlation_underDamped(Spectral_UnderDamped):
     def __init__(self, omega, omega_c, t, lamd, gamma, kBT, h_bar):
@@ -112,6 +116,9 @@ class Correlation_underDamped(Spectral_UnderDamped):
 
         return constant * (coth_plus_analytical - 1) * exp_negative_analytical + (
                 - coth_negative_analytical + 1) * exp_plus_analytical
+
+    def __add__(self, other):
+        return self.calculate() + other.calculate()
 
 
 class MatsubaraApproximation(CorrelationFunction):
