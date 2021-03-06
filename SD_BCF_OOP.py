@@ -7,9 +7,11 @@ class SpectralDensity:
        This class is used to build the spectral density for the over and under oscillation mode.
        """
 
-    def __init__(self, lamd, gamma):
+    def __init__(self, lamd, gamma, kBT, h_bar):
         self.lamd = lamd
         self.gamma = gamma
+        self.kBT = kBT
+        self.h_bar = h_bar
         # self.omega = omega
         # self.omega_c = omega_c
 
@@ -17,12 +19,12 @@ class SpectralDensity:
         pass
 
     def plotting(self, x_axis):
-        plt.plot(x_axis, self.calculate())  # ex: SpectralDensity.plotting(over,omega_list)
+        return plt.plot(x_axis, self.calculate())  # ex: SpectralDensity.plotting(over,omega_list)
 
 
 class SdOverDamped(SpectralDensity):
     def __init__(self, omega):
-        super().__init__(lamd, gamma)
+        super().__init__(lamd, gamma, kBT, h_bar)
         self.omega = omega
 
     # Class_methods:
@@ -33,10 +35,9 @@ class SdOverDamped(SpectralDensity):
 
 class SdUnderDamped(SpectralDensity):
     def __init__(self, omega, omega_c):
-        super().__init__(lamd, gamma)
+        super().__init__(lamd, gamma, kBT, h_bar)
         self.omega = omega
         self.omega_c = omega_c
-
 
     def calculate(self):
         return (2 * self.lamd * self.gamma * self.omega * self.omega_c ** 2) / (
@@ -44,16 +45,13 @@ class SdUnderDamped(SpectralDensity):
 
 
 # =======================================
-class CorrelationFunction:
+class CorrelationFunction(SpectralDensity):
     """
     This class is used to calculate the Bath Correlation Function for the over and under damped oscillation modes.
     """
 
-    def __init__(self, lamd, gamma, kBT, h_bar):
-        self.kBT = kBT
-        self.h_bar = h_bar
-        self.lamd = lamd
-        self.gamma = gamma
+    def __init__(self):
+        super().__init__(lamd, gamma, kBT, h_bar)
 
     def calculate(self):
         pass
@@ -62,10 +60,9 @@ class CorrelationFunction:
         plt.plot(x_axis, self.calculate())  # ex: SpectralDensity.plotting(over,omega_list)
 
 
-class COverDamped(CorrelationFunction):
+class Correlation_overDamped(SdOverDamped):
     def __init__(self, omega, omega_c, t):
-        super().__init__(lamd, gamma, kBT, h_bar)
-        self.omega = omega
+        super().__init__(omega)
         self.omega_c = omega_c
         self.t = t
 
@@ -78,14 +75,12 @@ class COverDamped(CorrelationFunction):
         """
         beta = 1 / self.kBT
         cot = 1 / np.tan((gamma * beta) / 2)
-        return lamd * gamma * (cot - 1j) * np.exp(-gamma * self.t / h_bar)
+        return lamd * gamma * (cot - 1j) * np.exp(-gamma * self.t / self.h_bar)
 
 
-class CUnderDamped(CorrelationFunction):
+class Correlation_underDamped(SdUnderDamped):
     def __init__(self, omega, omega_c, t):
-        super().__init__(lamd, gamma, kBT, h_bar)
-        self.omega = omega
-        self.omega_c = omega_c
+        super().__init__(omega, omega_c)
         self.t = t
 
     def calculate(self):
@@ -108,6 +103,7 @@ class CUnderDamped(CorrelationFunction):
 
         return constant * (coth_plus_analytical - 1) * exp_negative_analytical + (
                 - coth_negative_analytical + 1) * exp_plus_analytical
+
 
 class MatsubaraApproximation:
     """

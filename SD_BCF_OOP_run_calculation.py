@@ -62,3 +62,9 @@ Total_SD = SCP.SdUnderDamped(omega_list, omega_c) + SCP.SdOverDamped(omega_c)  #
 # # axs[ 1 ].plot(t_list,Total_BCF_lowTemp, 'r')
 # axs[ 1 ].plot(Total_SD, 'g--')
 # plt.show()
+
+
+# SD_under.plotting(omega_list)
+# CR = CorrelationFunction(lamd,gamma,kBT,h_bar)
+# CR_over = COverDamped(omega_list,omega_c)
+# CR_over.calculate()
