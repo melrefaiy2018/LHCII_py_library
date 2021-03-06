@@ -1,7 +1,7 @@
 import numpy as np
 
 from SD_BCF_OOP import SpectralDensity, Spectral_OverDamped, Spectral_UnderDamped, CorrelationFunction, \
-    Correlation_overDamped, Correlation_underDamped, Combine_Spectral
+    Correlation_overDamped, Correlation_underDamped
 
 # Constants:
 # ----------
@@ -56,4 +56,4 @@ Total_correlation = Total_correlation.reshape(199, 3)
 # plt.figure()
 # plt.plot(t_list, Total_correlation)
 # plt.show()
-Combine = Combine_Spectral(omega_list, omega_c, lamd, gamma, kBT, h_bar)
+# Combine = Combine_Spectral(omega_list, omega_c, lamd, gamma, kBT, h_bar)
