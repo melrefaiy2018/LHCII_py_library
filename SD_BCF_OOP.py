@@ -55,18 +55,20 @@ class CorrelationFunction:
         self.lamd = lamd
         self.gamma = gamma
 
-    def calculate(self, omega, omaga_c, t):
+    def calculate(self):
         pass
 
     def plotting(self, x_axis):
-        plt.plot(x_axis, self.calculate(self, omega, omega_c, t))  # ex: SpectralDensity.plotting(over,omega_list)
+        plt.plot(x_axis, self.calculate())  # ex: SpectralDensity.plotting(over,omega_list)
 
 
 class COverDamped(CorrelationFunction):
-    def __init__(self):
+    def __init__(self, omega, omega_c):
         super().__init__(lamd, gamma, kBT, h_bar)
+        self.omega = omega
+        self.omega_c = omega_c
 
-    def calculate(self, omega, omaga_c, t):
+    def calculate(self):
         """
         This function is used to calculate the overdamped mode at high temperature approximation:
         Equation:
@@ -79,10 +81,12 @@ class COverDamped(CorrelationFunction):
 
 
 class CUnderDamped(CorrelationFunction):
-    def __init__(self):
-        super().__init__(lamd, gamma, omega_c, kBT)
+    def __init__(self, omega, omega_c):
+        super().__init__(lamd, gamma, kBT, h_bar)
+        self.omega = omega
+        self.omega_c = omega_c
 
-    def calculate(self, omega, omega_c, t):
+    def calculate(self):
         """
         This function is used to calculate the under-damped mode at high temperature approximation:
         FORMULA:
@@ -91,17 +95,17 @@ class CUnderDamped(CorrelationFunction):
 
         """
         beta = 1 / self.kBT
-        ki = np.sqrt(omega_c ** 2 - (self.gamma ** 2 / 4))
+        ki = np.sqrt(self.omega_c ** 2 - (self.gamma ** 2 / 4))
 
         coth_plus_analytical = 1 / np.tanh(beta * (ki + 1j * self.gamma / 2) / 2)
         coth_negative_analytical = 1 / np.tanh(beta * (- ki + 1j * self.gamma / 2) / 2)
 
         exp_plus_analytical = np.exp(-t * (self.gamma / 2 + 1j * ki) / self.h_bar)
         exp_negative_analytical = np.exp(-t * (self.gamma / 2 - 1j * ki) / self.h_bar)
-        constant = self.lamd * omega_c ** 2 / (2 * ki)
+        constant = self.lamd * self.omega_c ** 2 / (2 * ki)
 
-        return constant * ((coth_plus_analytical(beta, ki) - 1) * exp_negative_analytical(t, ki) + (
-                - coth_negative_analytical(beta, ki) + 1) * exp_plus_analytical(t, ki))
+        return constant * (coth_plus_analytical - 1) * exp_negative_analytical + (
+                - coth_negative_analytical + 1) * exp_plus_analytical
 
 class MatsubaraApproximation:
     """
@@ -162,10 +166,48 @@ omega_c = 500  # Unit: cm^-1
 l = 0
 N = 40
 
-# Example:
-# =======
-# overDamped = SdOverDamped(omega_list)
-# SD = SpectralDensity
-# SD.plotting(overDamped ,omega_list)
-# underDamped = SdUnderDamped(omega_list, omega_c)
-# SD.plotting(overDamped, omega_list) + SD.plotting(underDamped, omega_list)
+# # Object Instantiation:
+# # ---------------------
+# SD = SpectralDensity(omega_list)  # SD Object Instantiation
+# C_t = CorrelationFunction(omega_list, lamd, gamma, omega_c, kBT)  # correlation Object Instantiation
+# MatsubaraApproximation = MatsubaraApproximation(omega_list, lamd, gamma, omega_c)  # Matsubara Approx Object
+# # Instantiation
+#
+# # storing list:
+# # -------------
+# BCF_under_damped_highTemp = [ ]
+# BCF_over_damped_highTemp = [ ]
+# BCF_under_damped_lowTemp = [ ]
+# BCF_over_damped_lowTemp = [ ]
+#
+# for t in t_list:
+#     # High temp approximation:
+#     # ------------------------
+#     BCF_under_damped_highTemp.append(C_t.correlation_underDamped_mode(t))
+#     BCF_over_damped_highTemp.append(C_t.correlation_overDamped_mode(t))
+#     # Low temperature approximation:
+#     # ------------------------------
+#     BCF_over_damped_lowTemp.append(
+#         C_t.correlation_overDamped_mode(t) - MatsubaraApproximation.Mats_overDamped(t, l, N))
+#     BCF_under_damped_lowTemp.append(
+#         C_t.correlation_underDamped_mode(t) - MatsubaraApproximation.Mats_underDamped(t, l, N))
+#
+# Total_BCF_highTemp = np.array(BCF_under_damped_highTemp) + np.array(BCF_over_damped_highTemp)
+# Total_BCF_lowTemp = np.array(BCF_under_damped_lowTemp) + np.array(BCF_over_damped_lowTemp)
+#
+# Total_SD = SD.J_overDamped_mode() + SD.J_underDamped_mode(omega_c)  # construct 1 over & 1 under-damped mode
+#
+# # Plotting:
+# # ---------
+# # plt.plot(t_list, Total_BCF_highTemp)
+# # plt.plot(t_list,Total_BCF_lowTemp)
+# # plt.plot(Total_SD)
+# # plt.plot(t_list, BCF_over_damped_lowTemp)
+# # plt.plot(t_list, BCF_under_damped_lowTemp)
+# # plt.show()
+#
+# fig, axs = plt.subplots(2)
+# axs[ 0 ].plot(t_list, Total_BCF_highTemp, 'g')
+# # axs[ 1 ].plot(t_list,Total_BCF_lowTemp, 'r')
+# axs[ 1 ].plot(Total_SD, 'g--')
+# plt.show()
