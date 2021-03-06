@@ -22,7 +22,7 @@ class SpectralDensity:
         return plt.plot(x_axis, self.calculate())  # ex: SpectralDensity.plotting(over,omega_list)
 
 
-class Spectral_UnderDamped(SpectralDensity):
+class Spectral_OverDamped(SpectralDensity):
     def __init__(self, omega):
         super().__init__(lamd, gamma, kBT, h_bar)
         self.omega = omega
