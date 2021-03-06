@@ -1,8 +1,7 @@
-import matplotlib.pyplot as plt
 import numpy as np
 
 from SD_BCF_OOP import SpectralDensity, Spectral_OverDamped, Spectral_UnderDamped, CorrelationFunction, \
-    Correlation_overDamped, Correlation_underDamped
+    Correlation_overDamped, Correlation_underDamped, Combine_Spectral
 
 # Constants:
 # ----------
@@ -26,7 +25,6 @@ N = 40
 # # ---------------------
 SD = SpectralDensity(lamd, gamma, kBT, h_bar)
 SD_over1 = Spectral_OverDamped(omega_list, omega_c[ 0 ], lamd, gamma, kBT, h_bar)  # the first over-damped
-SD_over2 = Spectral_OverDamped(omega_list, omega_c[ 1 ], lamd, gamma, kBT, h_bar)  # the second over-damped
 SD_under1 = Spectral_UnderDamped(omega_list, omega_c[ 0 ], lamd, gamma, kBT, h_bar)  # the first under-damped
 SD_under2 = Spectral_UnderDamped(omega_list, omega_c[ 1 ], lamd, gamma, kBT, h_bar)  # the second under-damped
 SD_under3 = Spectral_UnderDamped(omega_list, omega_c[ 2 ], lamd, gamma, kBT, h_bar)  # the second under-damped
@@ -36,19 +34,26 @@ SD_under3 = Spectral_UnderDamped(omega_list, omega_c[ 2 ], lamd, gamma, kBT, h_b
 
 Total_SD = SD_over1.calculate() + SD_under1.calculate() + SD_under2.calculate() + SD_under3.calculate()  # construct 1 over & 1 under-damped mode
 Total_SD = Total_SD.reshape(999, 3)
+
+# Plot SD:
+# ========
+# plt.figure()
 # plt.plot(omega_list, Total_SD)
 # plt.show()
 
 Correlation = CorrelationFunction(lamd, gamma, kBT, h_bar)
 
-corr_over1 = Correlation_overDamped(omega_list, 60, t_list, lamd, gamma, kBT, h_bar)
-corr_over2 = Correlation_overDamped(omega_list, 70, t_list, lamd, gamma, kBT, h_bar)
-corr_under1 = Correlation_underDamped(omega_list, omega_c[ 0 ], t_list, lamd, gamma, kBT, h_bar)
-corr_under2 = Correlation_underDamped(omega_list, omega_c[ 1 ], t_list, lamd, gamma, kBT, h_bar)
-corr_under3 = Correlation_underDamped(omega_list, omega_c[ 2 ], t_list, lamd, gamma, kBT, h_bar)
+corr_over1 = Correlation_overDamped(omega_list, omega_c, t_list, lamd, gamma, kBT, h_bar)
+corr_under1 = Correlation_underDamped(omega_list, omega_c, t_list, lamd, gamma, kBT, h_bar)
+corr_under2 = Correlation_underDamped(omega_list, omega_c, t_list, lamd, gamma, kBT, h_bar)
+corr_under3 = Correlation_underDamped(omega_list, omega_c, t_list, lamd, gamma, kBT, h_bar)
 
-Total_correlation = corr_over1.calculate() + corr_over2.calculate() + corr_under1.calculate() + corr_under2.calculate() + corr_under3.calculate()
+Total_correlation = corr_over1.calculate() + corr_under1.calculate() + corr_under2.calculate() + corr_under3.calculate()
 Total_correlation = Total_correlation.reshape(199, 3)
 
-plt.plot(t_list, Total_correlation)
-plt.show()
+# Plot Correlation:
+# ----------------
+# plt.figure()
+# plt.plot(t_list, Total_correlation)
+# plt.show()
+Combine = Combine_Spectral(omega_list, omega_c, lamd, gamma, kBT, h_bar)
