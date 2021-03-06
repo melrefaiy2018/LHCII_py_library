@@ -62,8 +62,7 @@ class CorrelationFunction(SpectralDensity):
 
 class Correlation_overDamped(Spectral_UnderDamped):
     def __init__(self, omega, omega_c, t):
-        super().__init__(omega)
-        self.omega_c = omega_c
+        super().__init__(omega, omega_c)
         self.t = t
 
     def calculate(self):
@@ -225,3 +224,10 @@ N = 40
 # # axs[ 1 ].plot(t_list,Total_BCF_lowTemp, 'r')
 # axs[ 1 ].plot(Total_SD, 'g--')
 # plt.show()
+
+
+SD = SpectralDensity(lamd, gamma, kBT, h_bar)
+SD_over = Spectral_OverDamped(omega_list)
+SD_under = Spectral_UnderDamped(omega_list, omega_c)
+SD_over.plotting()
+Correlation = CorrelationFunction()
