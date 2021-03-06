@@ -31,8 +31,8 @@ SD_under3 = Spectral_UnderDamped(omega_list, omega_c[ 2 ], lamd, gamma, kBT, h_b
 
 # Mats_over = Mats_overDamped(omega_list, omega_c, t_list, l, N)
 # Mats_under = Mats_underDamped(omega_list, omega_c, t_list, l, N)
-
-Total_SD = SD_over1.calculate() + SD_under1.calculate() + SD_under2.calculate() + SD_under3.calculate()  # construct 1 over & 1 under-damped mode
+Total_SD = SD_over1 + SD_under1
+# Total_SD = SD_over1.calculate() + SD_under1.calculate() + SD_under2.calculate() + SD_under3.calculate()  # construct 1 over & 1 under-damped mode
 Total_SD = Total_SD.reshape(999, 3)
 
 # Plot SD:
@@ -48,7 +48,7 @@ corr_under1 = Correlation_underDamped(omega_list, omega_c, t_list, lamd, gamma, 
 corr_under2 = Correlation_underDamped(omega_list, omega_c, t_list, lamd, gamma, kBT, h_bar)
 corr_under3 = Correlation_underDamped(omega_list, omega_c, t_list, lamd, gamma, kBT, h_bar)
 
-Total_correlation = corr_over1.calculate() + corr_under1.calculate() + corr_under2.calculate() + corr_under3.calculate()
+Total_correlation = corr_over1 + corr_under1
 Total_correlation = Total_correlation.reshape(199, 3)
 
 # Plot Correlation:

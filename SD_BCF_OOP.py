@@ -24,6 +24,9 @@ class SpectralDensity:
     def plotting(self, x_axis):
         return plt.plot(x_axis, self.calculate())  # ex: SpectralDensity.plotting(over,omega_list)
 
+    # def __add__(self, other):
+    #     return self.calculate() + other.calculate()
+
 
 class Spectral_OverDamped(SpectralDensity):
     def __init__(self, omega, omega_c, lamd, gamma, kBT, h_bar):
@@ -36,6 +39,9 @@ class Spectral_OverDamped(SpectralDensity):
     def calculate(self):
         return 2 * self.lamd * self.omega * self.gamma / (self.omega ** 2 + self.gamma ** 2)
 
+    def __add__(self, other):
+        return self.calculate() + other.calculate()
+
 
 class Spectral_UnderDamped(SpectralDensity):
     def __init__(self, omega, omega_c, lamd, gamma, kBT, h_bar):
@@ -47,7 +53,8 @@ class Spectral_UnderDamped(SpectralDensity):
         return (2 * self.lamd * self.gamma * self.omega * self.omega_c ** 2) / (
                 (self.omega_c ** 2 - self.omega ** 2) ** 2 + (self.omega ** 2) * (self.gamma ** 2))
 
-
+    def __add__(self, other):
+        return self.calculate() + other.calculate()
 class CorrelationFunction(SpectralDensity):
     """
     This class is used to calculate the Bath Correlation Function for the over and under damped oscillation modes.
