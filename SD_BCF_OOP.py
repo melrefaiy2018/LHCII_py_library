@@ -63,10 +63,11 @@ class CorrelationFunction:
 
 
 class COverDamped(CorrelationFunction):
-    def __init__(self, omega, omega_c):
+    def __init__(self, omega, omega_c, t):
         super().__init__(lamd, gamma, kBT, h_bar)
         self.omega = omega
         self.omega_c = omega_c
+        self.t = t
 
     def calculate(self):
         """
@@ -77,14 +78,15 @@ class COverDamped(CorrelationFunction):
         """
         beta = 1 / self.kBT
         cot = 1 / np.tan((gamma * beta) / 2)
-        return lamd * gamma * (cot - 1j) * np.exp(-gamma * t / h_bar)
+        return lamd * gamma * (cot - 1j) * np.exp(-gamma * self.t / h_bar)
 
 
 class CUnderDamped(CorrelationFunction):
-    def __init__(self, omega, omega_c):
+    def __init__(self, omega, omega_c, t):
         super().__init__(lamd, gamma, kBT, h_bar)
         self.omega = omega
         self.omega_c = omega_c
+        self.t = t
 
     def calculate(self):
         """
@@ -100,8 +102,8 @@ class CUnderDamped(CorrelationFunction):
         coth_plus_analytical = 1 / np.tanh(beta * (ki + 1j * self.gamma / 2) / 2)
         coth_negative_analytical = 1 / np.tanh(beta * (- ki + 1j * self.gamma / 2) / 2)
 
-        exp_plus_analytical = np.exp(-t * (self.gamma / 2 + 1j * ki) / self.h_bar)
-        exp_negative_analytical = np.exp(-t * (self.gamma / 2 - 1j * ki) / self.h_bar)
+        exp_plus_analytical = np.exp(-self.t * (self.gamma / 2 + 1j * ki) / self.h_bar)
+        exp_negative_analytical = np.exp(-self.t * (self.gamma / 2 - 1j * ki) / self.h_bar)
         constant = self.lamd * self.omega_c ** 2 / (2 * ki)
 
         return constant * (coth_plus_analytical - 1) * exp_negative_analytical + (
