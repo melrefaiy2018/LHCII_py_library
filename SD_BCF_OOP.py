@@ -22,7 +22,7 @@ class SpectralDensity:
         return plt.plot(x_axis, self.calculate())  # ex: SpectralDensity.plotting(over,omega_list)
 
 
-class SdOverDamped(SpectralDensity):
+class Sepctral_OverDamped(SpectralDensity):
     def __init__(self, omega):
         super().__init__(lamd, gamma, kBT, h_bar)
         self.omega = omega
@@ -33,7 +33,7 @@ class SdOverDamped(SpectralDensity):
         return 2 * self.lamd * self.omega * self.gamma / (self.omega ** 2 + self.gamma ** 2)
 
 
-class SdUnderDamped(SpectralDensity):
+class Sepctral_UnderDamped(SpectralDensity):
     def __init__(self, omega, omega_c):
         super().__init__(lamd, gamma, kBT, h_bar)
         self.omega = omega
@@ -60,7 +60,7 @@ class CorrelationFunction(SpectralDensity):
         plt.plot(x_axis, self.calculate())  # ex: SpectralDensity.plotting(over,omega_list)
 
 
-class Correlation_overDamped(SdOverDamped):
+class Correlation_overDamped(Sepctral_OverDamped):
     def __init__(self, omega, omega_c, t):
         super().__init__(omega)
         self.omega_c = omega_c
@@ -78,7 +78,7 @@ class Correlation_overDamped(SdOverDamped):
         return lamd * gamma * (cot - 1j) * np.exp(-gamma * self.t / self.h_bar)
 
 
-class Correlation_underDamped(SdUnderDamped):
+class Correlation_underDamped(Sepctral_UnderDamped):
     def __init__(self, omega, omega_c, t):
         super().__init__(omega, omega_c)
         self.t = t
