@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 
 from SD_BCF_OOP import SpectralDensity, Spectral_OverDamped, Spectral_UnderDamped, CorrelationFunction, \
@@ -32,14 +33,13 @@ SD_under3 = Spectral_UnderDamped(omega_list, omega_c[ 2 ], lamd, gamma, kBT, h_b
 # Mats_over = Mats_overDamped(omega_list, omega_c, t_list, l, N)
 # Mats_under = Mats_underDamped(omega_list, omega_c, t_list, l, N)
 Total_SD = SD_over1 + SD_under1
-# Total_SD = SD_over1.calculate() + SD_under1.calculate() + SD_under2.calculate() + SD_under3.calculate()  # construct 1 over & 1 under-damped mode
 Total_SD = Total_SD.reshape(999, 3)
 
 # Plot SD:
 # ========
-# plt.figure()
-# plt.plot(omega_list, Total_SD)
-# plt.show()
+plt.figure()
+plt.plot(omega_list, Total_SD)
+plt.show()
 
 Correlation = CorrelationFunction(lamd, gamma, kBT, h_bar)
 
@@ -53,7 +53,7 @@ Total_correlation = Total_correlation.reshape(199, 3)
 
 # Plot Correlation:
 # ----------------
-# plt.figure()
-# plt.plot(t_list, Total_correlation)
-# plt.show()
+plt.figure()
+plt.plot(t_list, Total_correlation)
+plt.show()
 # Combine = Combine_Spectral(omega_list, omega_c, lamd, gamma, kBT, h_bar)
