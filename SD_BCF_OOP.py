@@ -44,7 +44,7 @@ class Spectral_UnderDamped(SpectralDensity):
                 (omega_c ** 2 - self.omega ** 2) ** 2 + (self.omega ** 2) * (self.gamma ** 2))
 
 
-# =======================================
+
 class CorrelationFunction(SpectralDensity):
     """
     This class is used to calculate the Bath Correlation Function for the over and under damped oscillation modes.
@@ -140,7 +140,7 @@ class Mats_overDamped(Correlation_overDamped):
 
 
 class Mats_underDamped(Correlation_underDamped):
-    def __init__(self, omega, omega_c, l, N):
+    def __init__(self, omega, omega_c, t, l, N):
         super().__init__(omega, omega_c, t)
         self.l = l
         self.N = N
@@ -229,5 +229,5 @@ N = 40
 SD = SpectralDensity(lamd, gamma, kBT, h_bar)
 SD_over = Spectral_OverDamped(omega_list)
 SD_under = Spectral_UnderDamped(omega_list, omega_c)
-SD_over.plotting()
+SD_over.plotting(omega_list)
 Correlation = CorrelationFunction()
