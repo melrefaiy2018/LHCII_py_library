@@ -61,12 +61,11 @@ class Spectral_UnderDamped(SpectralDensity):
         return self.calculate() + other.calculate()
 
 
-class NumericalCorrelation:
+# Correlation class
+# =================
+class NumericalCorrelation(SpectralDensity):
     def __init__(self, lamd, gamma, h_bar, kBT):
-        self.h_bar = h_bar
-        self.kBT = kBT
-        self.lamd = lamd
-        self.gamma = gamma
+        super().__init__(lamd, gamma, kBT, h_bar)
 
     def calculate(self):
         pass
@@ -84,7 +83,7 @@ class NumericalCorrUnderDamped(NumericalCorrelation):
 
     def calculate(self):
         coth = 1 / np.tanh(self.omega / (2 * self.kBT))
-        return (1 / np.pi) * Spectral_UnderDamped.calculate(self) * (
+        return (1 / np.pi) * Spectral_UnderDamped.calculate() * (
                 coth * np.cos(self.omega * self.t / self.h_bar))
 
 
@@ -95,9 +94,9 @@ class NumericalCorrOverDamped(NumericalCorrelation):
         self.omega_c = omega_c
         self.t = t
 
-    def calculate(self, Spectral_OverDamped):
+    def calculate(self):
         coth = 1 / np.tanh(self.omega / (2 * self.kBT))
-        return (1 / np.pi) * self.calculate(self) * (
+        return (1 / np.pi) * Spectral_OverDamped.calculate() * (
                 coth * np.cos(self.omega * self.t / self.h_bar))
 
 
@@ -122,4 +121,4 @@ class NumericalCorrImaOverDamped(NumericalCorrelation):
         self.t = t
 
     def calculate(self):
-        (- 1 / np.pi) * np.sin(self.omega * self.t / self.h_bar) * Spectral_OverDamped.calculate(self)
+        (- 1 / np.pi) * np.sin(self.omega * self.t / self.h_bar) * Spectral_OverDamped.calculate()
