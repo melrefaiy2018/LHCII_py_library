@@ -1,6 +1,7 @@
 # This piece of code represents the comparison between Novoderezhkin and Kreisbeck Spectral Density followed by calculation of
 # the correlation function for both cases:
 # ======================================================================================================================
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import trapz
 
@@ -17,11 +18,6 @@ omega_list = np.arange(delta_omega, 1000, delta_omega)  # Unit: cm^-1
 omega_c = np.array([ 300, 518, 745 ])  # Unit: cm^-1
 lamd = np.array([ 161, 16, 48 ])  # Unit : cm^-1
 neu = np.array([ 40, 1000, 600 ])
-
-
-# omega_c = np.array([ [ 300 ], [ 518 ], [ 745 ] ])  # Unit: cm^-1
-# lamd = np.array([ [ 161 ], [ 16 ], [ 48 ] ])  # Unit : cm^-1
-# neu = np.array([ [ 40 ], [ 1000 ], [ 600 ] ])
 
 
 # Novadri. Formula:
@@ -92,21 +88,12 @@ def BCF_overdamped_real_Kri(omega, omega_c, lamd, neu, t):
     return (1 / np.pi) * SD * (coth * np.cos(omega * t / h_bar))
 
 
-def UnderCorrelationIntegrandList(omega_list, omega_c, lamd, gamma, t):
-    Under_integrand_R_list = [ ]
-    for index_omega, index_lamd in zip(omega_c, lamd):
-        Under_integrand_R_list = (
-            [ BCF_underdamped_real_Nov(omega, omega_c[ index_omega ], t, lamd[ index_lamd ], gamma) for omega in
-              omega_list ])
-    return Under_integrand_R_list
-
-
 # List:
 # =====
 J_under = [ ]
 J_over = [ ]
 JK_lst = [ ]
-Over_Under_Correlation_R_Kri_list = [ ]
+Over_Correlation_R_Kri_list = [ ]
 Over_Correlation_R_Nov_list = [ ]
 Under_Correlation_R_Nov_list = [ ]
 Under_Correlation_R_Kri_list = [ ]
@@ -133,6 +120,10 @@ for t in t_list:
     Over_integrand_R_Nov_list = np.array(Over_integrand_R_Nov_list1) + np.array(Over_integrand_R_Nov_list2) + np.array(
         Over_integrand_R_Nov_list3)
     Over_Correlation_R_Nov_list.append(trapz(Over_integrand_R_Nov_list, omega_list, delta_omega))
+    # # over-damped mode / Imaginary part:
+    # # ==================================
+    # Over_integrand_Im_Nov_list1 = [ BCF_overdamped_imaginary_Nov(omega, t, h_bar) for omega in omega_list ]
+    # Over_Correlation_Im_Nov_list.append(trapz(Over_integrand_Im_Nov_list1, omega_list, delta_omega))
 
     # Under-damped mode / Real part:
     # ==============================
@@ -147,26 +138,19 @@ for t in t_list:
         Under_integrand_R_Nov_list3)
     Under_Correlation_R_Nov_list.append(trapz(Under_integrand_R_Nov_list, omega_list, delta_omega))
 
-    # Under_integrand_R_Nov_list = UnderCorrelationIntegrandList(omega_list, omega_c, lamd, gamma, t)
-    # Under_Correlation_R_Nov_list.append(trapz(Under_integrand_R_Nov_list, omega_list, delta_omega))
-
     # B : Krisbeck case:
     # ------------------
-    # over-damped mode and Under-damped / Real part:
+    # over-damped mode / Real part:
     # =============================
-    Over_Under_integrand_R_Kri_list1 = [ BCF_overdamped_real_Kri(omega, omega_c[ 0 ], lamd[ 0 ], neu[ 0 ], t) for omega
-                                         in
-                                         omega_list ]
-    Over_Under_integrand_R_Kri_list2 = [ BCF_overdamped_real_Kri(omega, omega_c[ 1 ], lamd[ 1 ], neu[ 1 ], t) for omega
-                                         in
-                                         omega_list ]
-    Over_Under_integrand_R_Kri_list3 = [ BCF_overdamped_real_Kri(omega, omega_c[ 2 ], lamd[ 2 ], neu[ 2 ], t) for omega
-                                         in
-                                         omega_list ]
-    Over_Under_integrand_R_Kri_list = np.array(Over_Under_integrand_R_Kri_list1) + np.array(
-        Over_Under_integrand_R_Kri_list2) + np.array(
-        Over_Under_integrand_R_Kri_list3)
-    Over_Under_Correlation_R_Kri_list.append(trapz(Over_Under_integrand_R_Kri_list, omega_list, delta_omega))
+    Over_integrand_R_Kri_list1 = [ BCF_overdamped_real_Kri(omega, omega_c[ 0 ], lamd[ 0 ], neu[ 0 ], t) for omega in
+                                   omega_list ]
+    Over_integrand_R_Kri_list2 = [ BCF_overdamped_real_Kri(omega, omega_c[ 1 ], lamd[ 1 ], neu[ 1 ], t) for omega in
+                                   omega_list ]
+    Over_integrand_R_Kri_list3 = [ BCF_overdamped_real_Kri(omega, omega_c[ 2 ], lamd[ 2 ], neu[ 2 ], t) for omega in
+                                   omega_list ]
+    Over_integrand_R_Kri_list = np.array(Over_integrand_R_Kri_list1) + np.array(Over_integrand_R_Kri_list2) + np.array(
+        Over_integrand_R_Kri_list3)
+    Over_Correlation_R_Kri_list.append(trapz(Over_integrand_R_Kri_list, omega_list, delta_omega))
 
     # Under-damped mode / Real part:
     # ==============================
@@ -182,44 +166,44 @@ for t in t_list:
 
 # plotting Correlation:
 # =====================
-# fig1 = plt.figure("Correlation for OverDamped mode")
-# fig1.suptitle("Correlation for OverDamped mode")
-# plt.plot(t_list, Over_Under_Correlation_R_Kri_list, label="Kreisbeck")
-# plt.plot(t_list, Over_Correlation_R_Nov_list, '--', label="Novoderezhkin")
-# plt.xlabel(r'$\tau (fs)$', fontsize=14)
-# plt.ylabel(r'$\alpha(\tau) (cm-2)$', fontsize=14)
-# plt.legend()
-# fig1.savefig("/Users/48107674/Box/Reseach/2020/research/simulating_exciton_transport_in_LHCII_aggregates/graphs/Nov"
-#              "-Kriesbeck_comparison/Correlation_for_OverDamped_mode.png")
-#
-# fig2 = plt.figure("Correlation for UnderDamped mode")
-# fig2.suptitle("Correlation for UnderDamped mode")
-# plt.plot(t_list, Under_Correlation_R_Kri_list, label="Kreisbeck")
-# plt.plot(t_list, Under_Correlation_R_Nov_list, '--', label="Novoderezhkin")
-# plt.xlabel(r'$\tau (fs)$', fontsize=14)
-# plt.ylabel(r'$\alpha(\tau) (cm-2)$', fontsize=14)
-# plt.legend()
-# fig2.savefig("/Users/48107674/Box/Reseach/2020/research/simulating_exciton_transport_in_LHCII_aggregates/graphs/Nov"
-#              "-Kriesbeck_comparison/Correlation_for_UnderDamped_mode.png")
+fig1 = plt.figure("Correlation for OverDamped mode")
+fig1.suptitle("Correlation for OverDamped mode")
+plt.plot(t_list, Over_Correlation_R_Kri_list, label="Kreisbeck")
+plt.plot(t_list, Over_Correlation_R_Nov_list, '--', label="Novoderezhkin")
+plt.xlabel(r'$\tau (fs)$', fontsize=14)
+plt.ylabel(r'$\alpha(\tau) (cm-2)$', fontsize=14)
+plt.legend()
+fig1.savefig("/Users/48107674/Box/Reseach/2020/research/simulating_exciton_transport_in_LHCII_aggregates/graphs/Nov"
+             "-Kriesbeck_comparison/Correlation_for_OverDamped_mode.png")
 
-# fig3 = plt.figure("Total Correlation")
-# fig3.suptitle("Correlation for UnderDamped & OverDamped")
-# plt.plot(t_list, Over_Under_Correlation_R_Kri_list, label="Kreisbeck")
-# plt.plot(t_list, np.array(Over_Correlation_R_Nov_list) + np.array(Under_Correlation_R_Nov_list), '--',
-#          label="Novoderezhkin")
-# plt.legend()
-# fig3.savefig("/Users/48107674/Box/Reseach/2020/research/simulating_exciton_transport_in_LHCII_aggregates/graphs/Nov"
-#              "-Kriesbeck_comparison/Total Correlation.png")
-#
-# # plotting Spectral Density:
-# # ==========================
-# fig4 = plt.figure("Spectral Density")
-# fig4.suptitle("Spectral Density")
-# plt.plot(omega_list, JK_lst, label="Kreisbeck.")
-# plt.plot(omega_list, J_w_array, '--', label="Novoderezhkin")
-# plt.xlabel(r'$w (cm^-1)$', fontsize=14)
-# plt.ylabel(r'$J(w) (cm-1)$', fontsize=14)
-# plt.legend()
-# plt.show()
-# fig4.savefig("/Users/48107674/Box/Reseach/2020/research/simulating_exciton_transport_in_LHCII_aggregates/graphs/Nov"
-#              "-Kriesbeck_comparison/Spectral_Density.png")
+fig2 = plt.figure("Correlation for UnderDamped mode")
+fig2.suptitle("Correlation for UnderDamped mode")
+plt.plot(t_list, Under_Correlation_R_Kri_list, label="Kreisbeck")
+plt.plot(t_list, Under_Correlation_R_Nov_list, '--', label="Novoderezhkin")
+plt.xlabel(r'$\tau (fs)$', fontsize=14)
+plt.ylabel(r'$\alpha(\tau) (cm-2)$', fontsize=14)
+plt.legend()
+fig2.savefig("/Users/48107674/Box/Reseach/2020/research/simulating_exciton_transport_in_LHCII_aggregates/graphs/Nov"
+             "-Kriesbeck_comparison/Correlation_for_UnderDamped_mode.png")
+
+fig3 = plt.figure("Total Correlation")
+fig3.suptitle("Correlation for UnderDamped & OverDamped")
+plt.plot(t_list, np.array(Over_Correlation_R_Kri_list) + np.array(Under_Correlation_R_Kri_list), label="Kreisbeck")
+plt.plot(t_list, np.array(Over_Correlation_R_Nov_list) + np.array(Under_Correlation_R_Nov_list), '--',
+         label="Novoderezhkin")
+plt.legend()
+fig3.savefig("/Users/48107674/Box/Reseach/2020/research/simulating_exciton_transport_in_LHCII_aggregates/graphs/Nov"
+             "-Kriesbeck_comparison/Total Correlation.png")
+
+# plotting Spectral Density:
+# ==========================
+fig4 = plt.figure("Spectral Density")
+fig4.suptitle("Spectral Density")
+plt.plot(omega_list, JK_lst, label="Kreisbeck.")
+plt.plot(omega_list, J_w_array, '--', label="Novoderezhkin")
+plt.xlabel(r'$w (cm^-1)$', fontsize=14)
+plt.ylabel(r'$J(w) (cm-1)$', fontsize=14)
+plt.legend()
+plt.show()
+fig4.savefig("/Users/48107674/Box/Reseach/2020/research/simulating_exciton_transport_in_LHCII_aggregates/graphs/Nov"
+             "-Kriesbeck_comparison/Spectral_Density.png")
