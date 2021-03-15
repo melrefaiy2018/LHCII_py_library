@@ -16,8 +16,6 @@ class SpectralDensity:
         self.gamma = gamma
         self.kBT = kBT
         self.h_bar = h_bar
-        # self.omega = omega
-        # self.omega_c = omega_c
 
     def __repr__(self):
         return "Spectral Density with paramters equal (lamd = {} ,gamma = {})".format(self.lamd, self.gamma)

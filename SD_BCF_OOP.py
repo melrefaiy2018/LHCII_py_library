@@ -78,9 +78,9 @@ class CorrelationFunction(SpectralDensity):
 class Correlation_overDamped(Spectral_UnderDamped):
     def __init__(self, omega, omega_c, t, lamd, gamma, kBT, h_bar):
         super().__init__(omega, omega_c, lamd, gamma, kBT, h_bar)
-        self.t = t
+        # self.t = t
 
-    def calculate(self):
+    def calculate(self, t):
         """
         This function is used to calculate the overdamped mode at high temperature approximation:
         Equation:
@@ -89,7 +89,7 @@ class Correlation_overDamped(Spectral_UnderDamped):
         """
         beta = 1 / self.kBT
         cot = 1 / np.tan((self.gamma * beta) / 2)
-        return self.lamd * self.gamma * (cot - 1j) * np.exp(- self.gamma * self.t / self.h_bar)
+        return self.lamd * self.gamma * (cot - 1j) * np.exp(- self.gamma * t / self.h_bar)
 
     def __add__(self, other):
         return self.calculate() + other.calculate()
