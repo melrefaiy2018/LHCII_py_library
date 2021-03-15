@@ -2,7 +2,6 @@
 .idea/
 Correlation_function.py
 SD-Novdesch.py
-TDM-LHCII-calculation.py
 __pycache__/
 fitting_correlation.py
 generalized-TDM.py
